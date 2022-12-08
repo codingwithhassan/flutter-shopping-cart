@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({Key? key, required this.id}) : super(key: key);
@@ -53,7 +54,7 @@ class _ProductDetailState extends State<ProductDetail> {
           convert.jsonDecode(response.body) as Map<String, dynamic>;
       setState(() {
         List<String> images = [];
-        for(String image in jsonResponse["images"]){
+        for (String image in jsonResponse["images"]) {
           images.add(image);
         }
         productData = ProductData(
@@ -104,7 +105,147 @@ class _ProductDetailState extends State<ProductDetail> {
               },
             ),
           ),
-          Text("Price: \$" + productData.price.toString()),
+          const SizedBox(
+            height: 15.0,
+          ),
+          SingleChildScrollView(
+            child: Container(
+                alignment: Alignment.topRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            productData.title.toString(),
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                        // Container(
+                        //   alignment: Alignment.topRight,
+                        //   child: RatingBar.builder(
+                        //     initialRating: 3,
+                        //     minRating: 0,
+                        //     maxRating: 5,
+                        //     direction: Axis.horizontal,
+                        //     allowHalfRating: true,
+                        //     itemCount: 5,
+                        //     itemPadding:
+                        //         const EdgeInsets.symmetric(horizontal: 4.0),
+                        //     itemBuilder: (context, _) => const Icon(
+                        //       Icons.star,
+                        //       color: Colors.amber,
+                        //     ),
+                        //     onRatingUpdate: (rating) {
+                        //       print(rating);
+                        //     },
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            r'Price: $' + productData.price.toString(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            r'Available Stock: ' + productData.stock.toString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: Text(
+                        productData.description.toString(),
+                        style: const TextStyle(
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              const Text(
+                                r'Categories:   ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Chip(
+                                padding: const EdgeInsets.all(0),
+                                backgroundColor: Colors.blue,
+                                label: Text(productData.category.toString(),
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              const Text(
+                                r'Brands:   ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Chip(
+                                padding: const EdgeInsets.all(0),
+                                backgroundColor: Colors.green,
+                                label: Text(productData.brand.toString(),
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )),
+          ),
         ],
       ),
     );

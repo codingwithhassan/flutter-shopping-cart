@@ -55,6 +55,7 @@ class _ProductsState extends State<Products> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Products",
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.lightGreen,
