@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:products/models/product.dart';
+import 'package:products/services/dummyjson.dart';
 
 class Product extends StatefulWidget {
   const Product({Key? key, required this.id}) : super(key: key);
@@ -20,42 +19,17 @@ class _ProductState extends State<Product> {
   final PageController controller = PageController();
 
   ProductData productData = ProductData(0, [], 0);
-
-  void getData() async {
-    print("init api call");
-    var url = Uri.https('dummyjson.com', '/products/' + this.id.toString());
-    var response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      var jsonResponse =
-      convert.jsonDecode(response.body) as Map<String, dynamic>;
-      setState(() {
-        List<String> images = [];
-        for (String image in jsonResponse["images"]) {
-          images.add(image);
-        }
-        productData = ProductData(
-          jsonResponse["id"],
-          images,
-          jsonResponse["stock"],
-          jsonResponse["title"],
-          jsonResponse["description"],
-          jsonResponse["price"],
-          jsonResponse["discountPercentage"],
-          jsonResponse["rating"],
-          jsonResponse["brand"],
-          jsonResponse["category"],
-          jsonResponse["thumbnail"],
-        );
-      });
-    }
-  }
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    print(this.id);
-    getData();
+      DummyJson.getProduct(id).then((product) {
+        setState(() {
+          productData = product;
+          isLoading = false;
+        });
+      });
   }
 
   @override
@@ -67,7 +41,7 @@ class _ProductState extends State<Product> {
         backgroundColor: Colors.lightGreen,
         title: const Text("Detail Screen"),
       ),
-      body: Column(
+      body: !isLoading ? Column(
         children: [
           Container(
             height: screenHeight / 2.0,
@@ -157,7 +131,7 @@ class _ProductState extends State<Product> {
                     ),
                     Padding(
                       padding:
-                      const EdgeInsets.only(top: 20, left: 20, right: 20),
+                          const EdgeInsets.only(top: 20, left: 20, right: 20),
                       child: Text(
                         productData.description.toString(),
                         style: const TextStyle(
@@ -187,7 +161,7 @@ class _ProductState extends State<Product> {
                                 backgroundColor: Colors.blue,
                                 label: Text(productData.category.toString(),
                                     style:
-                                    const TextStyle(color: Colors.white)),
+                                        const TextStyle(color: Colors.white)),
                               )
                             ],
                           ),
@@ -213,7 +187,7 @@ class _ProductState extends State<Product> {
                                 backgroundColor: Colors.green,
                                 label: Text(productData.brand.toString(),
                                     style:
-                                    const TextStyle(color: Colors.white)),
+                                        const TextStyle(color: Colors.white)),
                               )
                             ],
                           ),
@@ -224,6 +198,11 @@ class _ProductState extends State<Product> {
                 )),
           ),
         ],
+      ) : Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: double.infinity,
+        child: const CircularProgressIndicator(),
       ),
     );
   }
