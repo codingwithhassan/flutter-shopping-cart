@@ -2,43 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:products/models/product.dart';
 
-class ProductDetail extends StatefulWidget {
-  const ProductDetail({Key? key, required this.id}) : super(key: key);
+class Product extends StatefulWidget {
+  const Product({Key? key, required this.id}) : super(key: key);
   final int id;
 
   @override
-  State<ProductDetail> createState() => _ProductDetailState(this.id);
+  State<Product> createState() => _ProductState(this.id);
 }
 
-class ProductData {
-  int? id;
-  String? title;
-  String? description;
-  int? price;
-  double? discountPercentage;
-  double? rating;
-  int stock = 0;
-  String? brand;
-  String? category;
-  String? thumbnail;
-  List<String> images = [];
-
-  ProductData(this.id, this.images, this.stock,
-      [this.title,
-      this.description,
-      this.price,
-      this.discountPercentage,
-      this.rating,
-      this.brand,
-      this.category,
-      this.thumbnail]);
-}
-
-class _ProductDetailState extends State<ProductDetail> {
+class _ProductState extends State<Product> {
   final int id;
 
-  _ProductDetailState(this.id);
+  _ProductState(this.id);
 
   final PageController controller = PageController();
 
@@ -51,7 +28,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
     if (response.statusCode == 200) {
       var jsonResponse =
-          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      convert.jsonDecode(response.body) as Map<String, dynamic>;
       setState(() {
         List<String> images = [];
         for (String image in jsonResponse["images"]) {
@@ -180,7 +157,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      const EdgeInsets.only(top: 20, left: 20, right: 20),
                       child: Text(
                         productData.description.toString(),
                         style: const TextStyle(
@@ -210,7 +187,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 backgroundColor: Colors.blue,
                                 label: Text(productData.category.toString(),
                                     style:
-                                        const TextStyle(color: Colors.white)),
+                                    const TextStyle(color: Colors.white)),
                               )
                             ],
                           ),
@@ -236,7 +213,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 backgroundColor: Colors.green,
                                 label: Text(productData.brand.toString(),
                                     style:
-                                        const TextStyle(color: Colors.white)),
+                                    const TextStyle(color: Colors.white)),
                               )
                             ],
                           ),
