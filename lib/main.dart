@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
 import 'package:products/ProductDetail.dart';
 import 'package:http/http.dart' as http;
@@ -41,8 +42,9 @@ class _ProductsState extends State<Products> {
     }
   }
 
-  void _openProduct(context,dynamic id){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetail(id: id)));
+  void _openProduct(context, dynamic id) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ProductDetail(id: id)));
   }
 
   @override
@@ -60,7 +62,9 @@ class _ProductsState extends State<Products> {
         appBar: AppBar(
           backgroundColor: Colors.lightGreen,
           centerTitle: true,
-          title: const Text("Products",),
+          title: const Text(
+            "Products",
+          ),
         ),
         body: Container(
           color: Colors.grey[300],
@@ -78,11 +82,24 @@ class _ProductsState extends State<Products> {
                     child: CustomListItem(
                       user: _data[index]["category"],
                       viewCount: _data[index]["price"],
-                      thumbnail: Image.network(_data[index]["thumbnail"]),
+                      thumbnail: CachedNetworkImage(
+                        imageUrl: _data[index]["thumbnail"],
+                        placeholder: (context, url) => Image.asset(
+                          'assets/images/default.png',
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                        ),
+                        height: 80,
+                        width: 80,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                       title: _data[index]["title"],
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     _openProduct(context, _data[index]["id"]);
                   },
                 ),
