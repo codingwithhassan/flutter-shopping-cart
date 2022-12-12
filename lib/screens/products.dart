@@ -15,6 +15,7 @@ class Products extends StatefulWidget {
 class _ProductsState extends State<Products> {
 
   List<Map<String, dynamic>> _data = [];
+  ScrollController scrollController = ScrollController();
 
   void getData() async {
     print("init api call");
@@ -49,45 +50,83 @@ class _ProductsState extends State<Products> {
   void initState() {
     super.initState();
     getData();
+    scrollController.addListener(_onScrollListView);
+  }
+
+  void _onScrollListView(){
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.maxFinite,
       child: ListView.builder(
+        controller: scrollController,
         itemCount: _data.length,
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: InkWell(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ProductItem(
-                  thumbnail: CachedNetworkImage(
-                    imageUrl: _data[index]["thumbnail"],
-                    placeholder: (context, url) => Image.asset(
-                      'assets/images/default.png',
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
+
+          double itemOffset = index * 90;
+          double totalOffset = scrollController.offset;
+
+          double animationValue = 1;
+          double opacity = 1;
+          if(itemOffset < totalOffset){
+            double difference = (totalOffset - itemOffset) / 100;
+            animationValue = difference;
+            opacity = animationValue.abs();
+            if(opacity > 1){
+              opacity = 1;
+            }else if(opacity < 0){
+              opacity = 0;
+            }
+            animationValue = (1 - animationValue).abs();
+          }
+
+          return Opacity(
+            opacity: opacity,
+            child: Transform.scale(
+              alignment: Alignment.center,
+              scale: animationValue,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: InkWell(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    height: 80,
-                    width: 80,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
+                    child: ProductItem(
+                      thumbnail: CachedNetworkImage(
+                        imageUrl: _data[index]["thumbnail"],
+                        placeholder: (context, url) => Image.asset(
+                          'assets/images/default.png',
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                        ),
+                        height: 80,
+                        width: 80,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                      ),
+                      title: _data[index]["title"],
+                      category: _data[index]["category"],
+                      price: _data[index]["price"],
+                    ),
                   ),
-                  title: _data[index]["title"],
-                  category: _data[index]["category"],
-                  price: _data[index]["price"],
+                  onTap: () {
+                    _openProduct(context, _data[index]["id"]);
+                  },
                 ),
               ),
-              onTap: () {
-                _openProduct(context, _data[index]["id"]);
-              },
             ),
           );
         },
