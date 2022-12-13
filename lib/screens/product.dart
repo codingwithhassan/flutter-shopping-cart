@@ -45,6 +45,7 @@ class _ProductState extends State<Product> {
         .cast<Cart>()
         .where((element) => element.product_id == id);
 
+    itemInCart = null;
     if (cartItems.isNotEmpty) {
       itemInCart = cartItems.first;
     }
@@ -156,7 +157,9 @@ class _ProductState extends State<Product> {
                                       productData: productData,
                                       total: itemInCart != null ? itemInCart!.quantity : 0,
                                       onChange: () {
-                                        setState(() {});
+                                        setState(() {
+                                          _setItemInCart();
+                                        });
                                       },
                                     )
                                   ],
