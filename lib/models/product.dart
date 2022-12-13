@@ -67,7 +67,7 @@ class ProductData extends HiveObject {
     images = json['images'].cast<String>();
   }
 
-  void addToCart(){
+  void addToCart() {
     final Box<Cart> cartBox = Boxes.getCart();
     Cart? itemInCart;
     var cartItems = cartBox.values
@@ -84,6 +84,27 @@ class ProductData extends HiveObject {
     } else {
       cartBox.add(Cart(product_id: id));
       print('added to cart');
+    }
+  }
+
+  void minusToCart() {
+    final Box<Cart> cartBox = Boxes.getCart();
+    Cart? itemInCart;
+    var cartItems = cartBox.values
+        .cast<Cart>()
+        .where((element) => element.product_id == id);
+
+    if (cartItems.isNotEmpty) {
+      itemInCart = cartItems.first;
+    }
+    if (itemInCart != null && itemInCart!.quantity != 0) {
+      if (itemInCart!.quantity == 1) {
+        itemInCart.delete();
+      } else {
+        itemInCart!.quantity = itemInCart!.quantity - 1;
+        itemInCart!.save();
+      }
+      print('-1 to cart');
     }
   }
 

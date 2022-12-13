@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:products/Boxes.dart';
 import 'package:products/models/cart.dart';
 import 'package:products/models/product.dart';
 import 'package:products/services/dummyjson.dart';
+import 'package:products/widgets/cart_counter.dart';
 
 class Product extends StatefulWidget {
   const Product({Key? key, required this.id}) : super(key: key);
@@ -40,7 +40,7 @@ class _ProductState extends State<Product> {
     _setItemInCart();
   }
 
-  void _setItemInCart(){
+  void _setItemInCart() {
     var cartItems = cartBox.values
         .cast<Cart>()
         .where((element) => element.product_id == id);
@@ -51,19 +51,6 @@ class _ProductState extends State<Product> {
 
     print(itemInCart);
     print(cartBox.values.cast<Cart>());
-  }
-
-  void _addItemToCart() {
-    if (itemInCart != null) {
-      itemInCart!.quantity = itemInCart!.quantity + 1;
-      itemInCart!.save();
-      print('+1 added to cart');
-    } else {
-      cartBox.add(Cart(product_id: productData.id));
-      _setItemInCart();
-      print('added to cart');
-    }
-    setState(() {});
   }
 
   @override
@@ -128,26 +115,6 @@ class _ProductState extends State<Product> {
                               ),
                             ),
                           ),
-                          // Container(
-                          //   alignment: Alignment.topRight,
-                          //   child: RatingBar.builder(
-                          //     initialRating: 3,
-                          //     minRating: 0,
-                          //     maxRating: 5,
-                          //     direction: Axis.horizontal,
-                          //     allowHalfRating: true,
-                          //     itemCount: 5,
-                          //     itemPadding:
-                          //         const EdgeInsets.symmetric(horizontal: 4.0),
-                          //     itemBuilder: (context, _) => const Icon(
-                          //       Icons.star,
-                          //       color: Colors.amber,
-                          //     ),
-                          //     onRatingUpdate: (rating) {
-                          //       print(rating);
-                          //     },
-                          //   ),
-                          // ),
                         ],
                       ),
                       const SizedBox(
@@ -157,33 +124,44 @@ class _ProductState extends State<Product> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           children: <Widget>[
-                            Text(
-                              r'Price: $' + productData.price.toString(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
-                            Text(
-                              r'Available Stock: ' +
-                                  productData.stock.toString(),
-                              style: const TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            InkWell(
-                              child: const Icon(
-                                Icons.add_shopping_cart,
-                                color: Colors.blueAccent,
-                                size: 30,
-                              ),
-                              onTap: () {
-                                _addItemToCart();
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      r'Price: $' +
+                                          productData.price.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Text(
+                                      r'Available Stock: ' +
+                                          productData.stock.toString(),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    CartCounter(
+                                      productData: productData,
+                                      total: itemInCart != null ? itemInCart!.quantity : 0,
+                                      onChange: () {
+                                        setState(() {});
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ],
                             )
                           ],
                         ),
