@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:products/Widgets/product_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Products extends StatefulWidget {
   const Products({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class Products extends StatefulWidget {
 
 class _ProductsState extends State<Products> {
   final List<ProductData> _data = [];
+  bool isLoading = true;
+  int countItems = 8;
   ScrollController scrollController = ScrollController();
 
   void getData() async {
@@ -28,6 +31,8 @@ class _ProductsState extends State<Products> {
       for (Map<String, dynamic> product in jsonResponse['products']) {
         setState(() {
           _data.add(ProductData.fromJson(product));
+          countItems = _data.length;
+          isLoading = false;
         });
       }
     }
@@ -55,13 +60,83 @@ class _ProductsState extends State<Products> {
     scrollController.dispose();
   }
 
+  Widget _loading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.white,
+      highlightColor: const Color(0xFFD6D6D6),
+      child: Container(
+        margin: const EdgeInsets.all(5.0),
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 0.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _product(int index){
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ProductItem(
+          productData: _data[index],
+          thumbnail: CachedNetworkImage(
+            imageUrl: _data[index].thumbnail,
+            placeholder: (context, url) => Image.asset(
+              'assets/images/default.png',
+              height: 80,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
+            height: 80,
+            width: 80,
+            fit: BoxFit.cover,
+            errorWidget: (context, url, error) =>
+            const Icon(Icons.error),
+          ),
+          title: _data[index].title,
+          category: _data[index].category,
+          price: _data[index].price,
+          onOpen: () {
+            _openProduct(context, _data[index].id);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
       child: ListView.builder(
         controller: scrollController,
-        itemCount: _data.length,
+        itemCount: countItems,
         itemBuilder: (context, index) {
           double itemOffset = index * 90;
           double totalOffset = scrollController.offset;
@@ -85,38 +160,7 @@ class _ProductsState extends State<Products> {
             child: Transform.scale(
               alignment: Alignment.center,
               scale: animationValue,
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ProductItem(
-                    productData: _data[index],
-                    thumbnail: CachedNetworkImage(
-                      imageUrl: _data[index].thumbnail,
-                      placeholder: (context, url) => Image.asset(
-                        'assets/images/default.png',
-                        height: 80,
-                        width: 80,
-                        fit: BoxFit.cover,
-                      ),
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
-                    title: _data[index].title,
-                    category: _data[index].category,
-                    price: _data[index].price,
-                    onOpen: () {
-                      _openProduct(context, _data[index].id);
-                    },
-                  ),
-                ),
-              ),
+              child: isLoading ? _loading() : _product(index),
             ),
           );
         },

@@ -39,6 +39,9 @@ dependencies:
   cached_network_image: ^3.2.3
   path_provider: ^2.0.11
 
+  # loading
+  shimmer: ^2.0.0
+
   # state & routing management
   get: ^4.6.5
 
