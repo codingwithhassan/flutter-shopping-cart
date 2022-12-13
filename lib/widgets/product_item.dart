@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:products/Boxes.dart';
+import 'package:products/models/cart.dart';
+import 'package:products/models/product.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({
     super.key,
+    required this.productData,
     required this.thumbnail,
     required this.title,
     required this.category,
     required this.price,
+    required this.onOpen,
   });
 
+  final ProductData productData;
   final Widget thumbnail;
   final String title;
   final String category;
   final int price;
+  final VoidCallback onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +31,12 @@ class ProductItem extends StatelessWidget {
         children: <Widget>[
           Expanded(
             flex: 2,
-            child: thumbnail,
+            child: InkWell(
+              child: thumbnail,
+              onTap: (){
+                onOpen();
+              },
+            ),
           ),
           Expanded(
             flex: 3,
@@ -33,6 +46,17 @@ class ProductItem extends StatelessWidget {
               price: price,
             ),
           ),
+          Expanded(
+            flex: 1,
+            child: IconButton(
+                onPressed: () {
+                  productData.addToCart();
+                },
+                icon: const Icon(
+                  Icons.add_shopping_cart,
+                  color: Colors.blueAccent,
+                )),
+          )
         ],
       ),
     );

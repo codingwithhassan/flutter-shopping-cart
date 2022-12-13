@@ -21,16 +21,16 @@ class DummyJson {
 
       return Future(() => ProductData(
             jsonResponse["id"],
-            images,
-            jsonResponse["stock"],
-            jsonResponse["title"],
-            jsonResponse["description"],
-            jsonResponse["price"],
-            jsonResponse["discountPercentage"],
-            jsonResponse["rating"],
-            jsonResponse["brand"],
-            jsonResponse["category"],
-            jsonResponse["thumbnail"],
+            title: jsonResponse["title"],
+            description: jsonResponse["description"],
+            price: jsonResponse["price"],
+            discountPercentage: jsonResponse["discountPercentage"],
+            rating: jsonResponse["rating"],
+            stock: jsonResponse["stock"],
+            brand: jsonResponse["brand"],
+            category: jsonResponse["category"],
+            thumbnail: jsonResponse["thumbnail"],
+            images: images,
           ));
     }
   }
