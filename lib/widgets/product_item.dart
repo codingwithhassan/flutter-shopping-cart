@@ -33,7 +33,7 @@ class ProductItem extends StatelessWidget {
             flex: 2,
             child: InkWell(
               child: thumbnail,
-              onTap: (){
+              onTap: () {
                 onOpen();
               },
             ),
@@ -51,6 +51,12 @@ class ProductItem extends StatelessWidget {
             child: IconButton(
                 onPressed: () {
                   productData.addToCart();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Item added to Cart"),
+                      duration: Duration(milliseconds: 300),
+                    ),
+                  );
                 },
                 icon: const Icon(
                   Icons.add_shopping_cart,
