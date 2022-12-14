@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:products/models/product.dart';
+import 'package:products/models/product_model.dart';
 
 class CartCounter extends StatelessWidget {
-  final ProductData productData;
+  final ProductModel productData;
   final VoidCallback onChange;
   final int total;
   const CartCounter(

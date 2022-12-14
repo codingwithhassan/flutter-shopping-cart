@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:products/models/product.dart';
+import 'package:products/controllers/product_controller.dart';
 import 'package:products/screens/product.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 import 'package:products/Widgets/product_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:get/get.dart';
 
 class Products extends StatefulWidget {
   const Products({Key? key}) : super(key: key);
@@ -15,27 +14,18 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  final List<ProductData> _data = [];
   bool isLoading = true;
   int countItems = 8;
   ScrollController scrollController = ScrollController();
+  final ProductController productController = Get.find<ProductController>();
 
-  void getData() async {
-    print("init api call");
-    var url = Uri.https('dummyjson.com', '/products');
-    var response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      var jsonResponse =
-          convert.jsonDecode(response.body) as Map<String, dynamic>;
-      for (Map<String, dynamic> product in jsonResponse['products']) {
-        setState(() {
-          _data.add(ProductData.fromJson(product));
-          countItems = _data.length;
-          isLoading = false;
-        });
-      }
-    }
+  void getData() {
+    productController.setProductList().then((products) {
+      setState(() {
+        countItems = productController.products.length;
+        isLoading = false;
+      });
+    });
   }
 
   void _openProduct(context, int id) {
@@ -104,9 +94,9 @@ class _ProductsState extends State<Products> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: ProductItem(
-          productData: _data[index],
+          productData: productController.products[index],
           thumbnail: CachedNetworkImage(
-            imageUrl: _data[index].thumbnail,
+            imageUrl: productController.products[index].thumbnail,
             placeholder: (context, url) => Image.asset(
               'assets/images/default.png',
               height: 80,
@@ -119,11 +109,11 @@ class _ProductsState extends State<Products> {
             errorWidget: (context, url, error) =>
             const Icon(Icons.error),
           ),
-          title: _data[index].title,
-          category: _data[index].category,
-          price: _data[index].price,
+          title: productController.products[index].title,
+          category: productController.products[index].category,
+          price: productController.products[index].price,
           onOpen: () {
-            _openProduct(context, _data[index].id);
+            _openProduct(context, productController.products[index].id);
           },
         ),
       ),

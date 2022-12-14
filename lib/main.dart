@@ -1,19 +1,20 @@
 import "package:flutter/material.dart";
-import 'package:path_provider/path_provider.dart';
-import 'package:products/models/cart.dart';
-import 'package:products/models/product.dart';
+import 'package:products/models/cart_model.dart';
 import 'package:products/screens/products.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dependencies.dart' as dependencies;
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+
+  WidgetsFlutterBinding.ensureInitialized();  // wait till dependencies loaded
+  await dependencies.init();
+
   await Hive.initFlutter();
   // var directory = await getApplicationDocumentsDirectory();
   // Hive.init(directory.path);
 
-  Hive.registerAdapter(ProductDataAdapter());
-  Hive.registerAdapter(CartAdapter());
-  await Hive.openBox<Cart>('cart');
+  Hive.registerAdapter(CartModelAdapter());
+  await Hive.openBox<CartModel>('cart');
 
   runApp(MaterialApp(
     title: "Products",
@@ -25,14 +26,20 @@ void main() async {
         title: const Text(
           "Products",
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.shopping_cart),
+          )
+        ],
       ),
       body: Container(
         color: Colors.grey[300],
         child: const Products(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {  },
-        child: const Icon(Icons.shopping_cart),
+        onPressed: () {},
+        child: const Icon(Icons.favorite),
       ),
     ),
   ));

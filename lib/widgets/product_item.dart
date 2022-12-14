@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:products/Boxes.dart';
-import 'package:products/models/cart.dart';
-import 'package:products/models/product.dart';
+import 'package:products/models/product_model.dart';
+import 'package:products/utils/alert.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({
@@ -15,7 +13,7 @@ class ProductItem extends StatelessWidget {
     required this.onOpen,
   });
 
-  final ProductData productData;
+  final ProductModel productData;
   final Widget thumbnail;
   final String title;
   final String category;

@@ -1,49 +1,49 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:products/Boxes.dart';
-import 'package:products/models/cart.dart';
-import 'package:products/models/product.dart';
-import 'package:products/services/dummyjson.dart';
+import 'package:products/boxes.dart';
+import 'package:products/controllers/product_controller.dart';
+import 'package:products/models/cart_model.dart';
+import 'package:products/models/product_model.dart';
 import 'package:products/widgets/cart_counter.dart';
+import 'package:get/get.dart';
 
 class Product extends StatefulWidget {
   const Product({Key? key, required this.id}) : super(key: key);
   final int id;
 
   @override
-  State<Product> createState() => _ProductState(this.id);
+  State<Product> createState() => _ProductState(id);
 }
 
 class _ProductState extends State<Product> {
   final int id;
-  final Box<Cart> cartBox = Boxes.getCart();
-  Cart? itemInCart;
+  final Box<CartModel> cartBox = Boxes.getCart();
+  CartModel? itemInCart;
+  final ProductController productController = Get.find<ProductController>();
 
   _ProductState(this.id);
 
   final PageController controller = PageController();
 
-  late ProductData productData;
+  late ProductModel productData;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    DummyJson.getProduct(id).then((product) {
-      setState(() {
-        productData = product;
-        isLoading = false;
-      });
+    ProductModel? productModel = productController.getProductById(id);
+    setState(() {
+      productData = productModel!;
+      isLoading = false;
     });
-
     _setItemInCart();
   }
 
   void _setItemInCart() {
     var cartItems = cartBox.values
-        .cast<Cart>()
-        .where((element) => element.product_id == id);
+        .cast<CartModel>()
+        .where((element) => element.productId == id);
 
     itemInCart = null;
     if (cartItems.isNotEmpty) {
@@ -51,7 +51,7 @@ class _ProductState extends State<Product> {
     }
 
     print(itemInCart);
-    print(cartBox.values.cast<Cart>());
+    print(cartBox.values.cast<CartModel>());
   }
 
   @override
@@ -155,7 +155,9 @@ class _ProductState extends State<Product> {
                                   children: [
                                     CartCounter(
                                       productData: productData,
-                                      total: itemInCart != null ? itemInCart!.quantity : 0,
+                                      total: itemInCart != null
+                                          ? itemInCart!.quantity
+                                          : 0,
                                       onChange: () {
                                         setState(() {
                                           _setItemInCart();
