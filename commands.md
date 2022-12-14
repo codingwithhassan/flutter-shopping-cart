@@ -1,0 +1,19 @@
+# Commands
+- flutter version
+- flutter version "versionNumber" (switch to versionNumber)
+- flutter doctor
+- flutter config
+- flutter emulators
+- flutter emulators --launch <emulator_id>
+- flutter run --verbose
+- flutter run --release (release build instead of debug but only for physical devices not emulators)
+- flutter run -d "Emulator_ID" (press r to reload & s to take screenshot)
+- flutter channel
+- flutter channel stable
+- flutter clean
+- flutter build (create executable file)
+- flutter build apk --debug
+- flutter devices
+- flutter install (deploy app to device)
+- flutter pub get (Install flutter packages)
+- flutter logs (show logs even device disconnected)
