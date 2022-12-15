@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:products/controllers/login_controller.dart';
 import 'package:products/controllers/product_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:products/screens/home/product_item.dart';
@@ -19,6 +20,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   int countItems = 8;
   ScrollController scrollController = ScrollController();
   final ProductController productController = Get.find<ProductController>();
+  final LoginController loginController = LoginController();
 
   void getData() {
     productController.setProductList().then((products) {
@@ -123,6 +125,42 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.purpleAccent,
+              ),
+              child: Text(
+                'Shopping App',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            const ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Messages'),
+            ),
+            const ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+            ),
+            const ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              onTap: loginController.logout,
+              title: const Text('Logout'),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(

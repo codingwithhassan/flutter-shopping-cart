@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:products/controllers/login_controller.dart';
+import 'package:products/logging.dart';
 import 'package:products/screens/auth/signup_screen.dart';
 import 'package:products/widgets/rounded_button.dart';
 
@@ -15,12 +17,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formField = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final LoginController loginController = LoginController();
+
+  final log = logger(SignupScreen);
+  bool isLoading = false;
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void _signIn() {
+    if (_formField.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      loginController.signIn(
+          emailController.text.toString(), passwordController.text.toString(),
+          () {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
   }
 
   @override
@@ -87,12 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               RoundedButton(
                 buttonText: "Login",
-                isLoading: false,
-                onTap: () {
-                  if (_formField.currentState!.validate()) {
-                    Get.offNamed('/');
-                  }
-                },
+                isLoading: isLoading,
+                onTap: _signIn,
               ),
               const SizedBox(
                 height: 30,

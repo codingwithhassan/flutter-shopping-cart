@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:products/screens/auth/login_screen.dart';
+import 'package:products/screens/home/products_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   static const String routeName = '/splash';
@@ -19,7 +20,7 @@ class SplashScreen extends StatelessWidget {
       pageTransitionType: PageTransitionType.bottomToTop,
       animationDuration: const Duration(seconds: 1),
       screenFunction: () async {
-        return const LoginScreen();
+        return loginController.isLogin() ? const ProductsScreen() : const LoginScreen();
       },
     );
   }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:products/controllers/login_controller.dart';
 import 'package:products/logging.dart';
 import 'package:products/screens/auth/login_screen.dart';
-import 'package:products/utils/alert.dart';
 import 'package:products/widgets/rounded_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupScreen extends StatefulWidget {
   static const routeName = '/signup';
@@ -20,9 +19,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final LoginController loginController = LoginController();
   final log = logger(SignupScreen);
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -42,20 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() {
         isLoading = true;
       });
-      _auth
-          .createUserWithEmailAndPassword(
-        email: emailController.text.toString(),
-        password: passwordController.text.toString(),
-      )
-          .then(
-        (value) {
-          Alert.success("Account created successfully!");
-          Get.offAllNamed(LoginScreen.routeName);
-        },
-      )
-      .onError((error, stackTrace){
-        log.e(error.toString());
-        Alert.error(error.toString());
+      loginController.signUp(emailController.text.toString(),passwordController.text.toString(), () {
         setState(() {
           isLoading = false;
         });
