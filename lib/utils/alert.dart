@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 // see toast messages even app closed
 class Alert {
-  void success(String message) {
+  static void success(String message) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -14,7 +14,7 @@ class Alert {
         fontSize: 16.0);
   }
 
-  void info(String message) {
+  static void info(String message) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -25,7 +25,7 @@ class Alert {
         fontSize: 16.0);
   }
 
-  void error(String message) {
+  static void error(String message) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -36,7 +36,7 @@ class Alert {
         fontSize: 16.0);
   }
 
-  void warning(String message) {
+  static void warning(String message) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,

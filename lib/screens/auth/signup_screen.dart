@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:products/logging.dart';
 import 'package:products/screens/auth/login_screen.dart';
+import 'package:products/utils/alert.dart';
 import 'package:products/widgets/rounded_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupScreen extends StatefulWidget {
   static const routeName = '/signup';
@@ -12,10 +15,19 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  bool isLoading = false;
   final _formField = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final log = logger(SignupScreen);
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -23,6 +35,32 @@ class _SignupScreenState extends State<SignupScreen> {
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _signUp() {
+    if (_formField.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      _auth
+          .createUserWithEmailAndPassword(
+        email: emailController.text.toString(),
+        password: passwordController.text.toString(),
+      )
+          .then(
+        (value) {
+          Alert.success("Account created successfully!");
+          Get.offAllNamed(LoginScreen.routeName);
+        },
+      )
+      .onError((error, stackTrace){
+        log.e(error.toString());
+        Alert.error(error.toString());
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
   }
 
   @override
@@ -36,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
-            top: height * 0.10,
+            top: height * 0.13,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +132,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         prefixIcon: Icon(Icons.lock),
                       ),
                       validator: (value) {
-                        if (value!.isEmpty || passwordController.text != value.toString()) {
+                        if (value!.isEmpty ||
+                            passwordController.text != value.toString()) {
                           return 'Confirm Password should be same';
                         }
                         return null;
@@ -108,11 +147,8 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               RoundedButton(
                 buttonText: "Register",
-                onTap: () {
-                  if (_formField.currentState!.validate()) {
-                    Get.offAllNamed(LoginScreen.routeName);
-                  }
-                },
+                isLoading: isLoading,
+                onTap: _signUp,
               ),
               const SizedBox(
                 height: 30,

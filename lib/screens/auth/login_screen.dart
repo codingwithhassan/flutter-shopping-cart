@@ -87,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               RoundedButton(
                 buttonText: "Login",
+                isLoading: false,
                 onTap: () {
                   if (_formField.currentState!.validate()) {
                     Get.offNamed('/');
