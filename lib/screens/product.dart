@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:products/boxes.dart';
 import 'package:products/controllers/product_controller.dart';
+import 'package:products/logging.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:products/models/product_model.dart';
 import 'package:products/widgets/cart_counter.dart';
@@ -21,6 +22,7 @@ class _ProductState extends State<Product> {
   final Box<CartModel> cartBox = Boxes.getCart();
   CartModel? itemInCart;
   final ProductController productController = Get.find<ProductController>();
+  final log = logger(Product);
 
   _ProductState(this.id);
 
@@ -50,8 +52,8 @@ class _ProductState extends State<Product> {
       itemInCart = cartItems.first;
     }
 
-    print(itemInCart);
-    print(cartBox.values.cast<CartModel>());
+    log.d(itemInCart);
+    log.d(cartBox.values.cast<CartModel>());
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
 import 'package:products/boxes.dart';
+import 'package:products/logging.dart';
 import 'package:products/models/cart_model.dart';
+import 'package:logger/logger.dart';
 
 class ProductModel {
   late int id;
@@ -44,35 +46,22 @@ class ProductModel {
   }
 
   void addToCart() {
-    final Box<CartModel> cartBox = Boxes.getCart();
-    CartModel? itemInCart;
-    var cartItems = cartBox.values
-        .cast<CartModel>()
-        .where((element) => element.productId == id);
-
-    if (cartItems.isNotEmpty) {
-      itemInCart = cartItems.first;
-    }
+    var log = logger(ProductModel);
+    CartModel? itemInCart = _getCartProduct();
     if (itemInCart != null) {
       itemInCart.quantity = itemInCart.quantity + 1;
       itemInCart.save();
-      print('+1 added to cart');
+      log.i('+1 added to cart');
     } else {
-      cartBox.add(CartModel(productId: id));
-      print('added to cart');
+      Boxes.getCart().add(CartModel(productId: id));
+      log.i('added to cart');
     }
   }
 
   void minusToCart() {
-    final Box<CartModel> cartBox = Boxes.getCart();
-    CartModel? itemInCart;
-    var cartItems = cartBox.values
-        .cast<CartModel>()
-        .where((element) => element.productId == id);
+    var log = logger(ProductModel);
+    CartModel? itemInCart = _getCartProduct();
 
-    if (cartItems.isNotEmpty) {
-      itemInCart = cartItems.first;
-    }
     if (itemInCart != null && itemInCart.quantity != 0) {
       if (itemInCart.quantity == 1) {
         itemInCart.delete();
@@ -80,8 +69,21 @@ class ProductModel {
         itemInCart.quantity = itemInCart.quantity - 1;
         itemInCart.save();
       }
-      print('-1 to cart');
+      log.i('-1 to cart');
     }
+  }
+
+  CartModel? _getCartProduct(){
+    final Box<CartModel> cartBox = Boxes.getCart();
+    var cartItems = cartBox.values
+        .cast<CartModel>()
+        .where((element) => element.productId == id);
+
+    CartModel? itemInCart;
+    if (cartItems.isNotEmpty) {
+      itemInCart = cartItems.first;
+    }
+    return itemInCart;
   }
 
   @override

@@ -17,3 +17,4 @@
 - flutter install (deploy app to device)
 - flutter pub get (Install flutter packages)
 - flutter logs (show logs even device disconnected)
+-  flutter analyze
