@@ -66,7 +66,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
         title: const Text("Detail Screen"),
       ),
       body: !isLoading

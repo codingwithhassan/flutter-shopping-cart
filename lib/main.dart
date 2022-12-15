@@ -1,9 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:products/screens/product_screen.dart';
 import 'package:products/screens/products_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:products/screens/splash_screen.dart';
 import 'dependencies.dart' as dependencies;
 
 void main() async {
@@ -17,6 +19,8 @@ void main() async {
   Hive.registerAdapter(CartModelAdapter());
   await Hive.openBox<CartModel>('cart');
 
+  await Firebase.initializeApp();
+
   runApp(const ShoppingApp());
 }
 
@@ -27,9 +31,17 @@ class ShoppingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: "Shopping App",
+      theme: ThemeData(
+        // primary color of floatingActionButton and appBar in Scaffold
+        primarySwatch: Colors.purple,
+      ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: SplashScreen.routeName,
       getPages: [
+        GetPage(
+          name: SplashScreen.routeName,
+          page: () => const SplashScreen(),
+        ),
         GetPage(
           name: ProductsScreen.routeName,
           page: () => const ProductsScreen(),
