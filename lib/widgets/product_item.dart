@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:products/models/product_model.dart';
-import 'package:products/utils/alert.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({

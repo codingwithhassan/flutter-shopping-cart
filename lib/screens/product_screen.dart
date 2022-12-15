@@ -9,22 +9,21 @@ import 'package:products/models/product_model.dart';
 import 'package:products/widgets/cart_counter.dart';
 import 'package:get/get.dart';
 
-class Product extends StatefulWidget {
-  const Product({Key? key, required this.id}) : super(key: key);
-  final int id;
+class ProductScreen extends StatefulWidget {
+  static const routeName = '/product/:id';
+
+  const ProductScreen({Key? key}) : super(key: key);
 
   @override
-  State<Product> createState() => _ProductState(id);
+  State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductState extends State<Product> {
-  final int id;
+class _ProductScreenState extends State<ProductScreen> {
+  final String id = Get.parameters['id'].toString();
   final Box<CartModel> cartBox = Boxes.getCart();
   CartModel? itemInCart;
   final ProductController productController = Get.find<ProductController>();
-  final log = logger(Product);
-
-  _ProductState(this.id);
+  final log = logger(ProductScreen);
 
   final PageController controller = PageController();
 
@@ -34,7 +33,7 @@ class _ProductState extends State<Product> {
   @override
   void initState() {
     super.initState();
-    ProductModel? productModel = productController.getProductById(id);
+    ProductModel? productModel = productController.getProductById(int.parse(id));
     setState(() {
       productData = productModel!;
       isLoading = false;
@@ -45,7 +44,7 @@ class _ProductState extends State<Product> {
   void _setItemInCart() {
     var cartItems = cartBox.values
         .cast<CartModel>()
-        .where((element) => element.productId == id);
+        .where((element) => element.productId == int.parse(id));
 
     itemInCart = null;
     if (cartItems.isNotEmpty) {
@@ -74,7 +73,7 @@ class _ProductState extends State<Product> {
           ? SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
+                  SizedBox(
                     height: screenHeight / 2.0,
                     child: PageView.builder(
                       controller: controller,

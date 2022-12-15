@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:products/controllers/product_controller.dart';
-import 'package:products/screens/product.dart';
 import 'package:products/Widgets/product_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
 
-class Products extends StatefulWidget {
-  const Products({Key? key}) : super(key: key);
+class ProductsScreen extends StatefulWidget {
+  static const routeName = '/';
+
+  const ProductsScreen({Key? key}) : super(key: key);
 
   @override
-  State<Products> createState() => _ProductsState();
+  State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
-class _ProductsState extends State<Products> {
+class _ProductsScreenState extends State<ProductsScreen> {
   bool isLoading = true;
   int countItems = 8;
   ScrollController scrollController = ScrollController();
@@ -29,8 +30,7 @@ class _ProductsState extends State<Products> {
   }
 
   void _openProduct(context, int id) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Product(id: id)));
+    Get.toNamed('/product/$id');
   }
 
   @override
@@ -122,38 +122,60 @@ class _ProductsState extends State<Products> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      child: ListView.builder(
-        controller: scrollController,
-        itemCount: countItems,
-        itemBuilder: (context, index) {
-          double itemOffset = index * 90;
-          double totalOffset = scrollController.offset;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightGreen,
+        centerTitle: true,
+        title: const Text(
+          "Products",
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.shopping_cart),
+          )
+        ],
+      ),
+      body: Container(
+        color: Colors.grey[300],
+        child: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: countItems,
+            itemBuilder: (context, index) {
+              double itemOffset = index * 90;
+              double totalOffset = scrollController.offset;
 
-          double animationValue = 1;
-          double opacity = 1;
-          if (itemOffset < totalOffset) {
-            double difference = (totalOffset - itemOffset) / 100;
-            animationValue = difference;
-            animationValue = (1 - animationValue).abs();
-            opacity = animationValue.abs();
-            if (opacity > 1) {
-              opacity = 1;
-            } else if (opacity < 0) {
-              opacity = 0;
-            }
-          }
+              double animationValue = 1;
+              double opacity = 1;
+              if (itemOffset < totalOffset) {
+                double difference = (totalOffset - itemOffset) / 100;
+                animationValue = difference;
+                animationValue = (1 - animationValue).abs();
+                opacity = animationValue.abs();
+                if (opacity > 1) {
+                  opacity = 1;
+                } else if (opacity < 0) {
+                  opacity = 0;
+                }
+              }
 
-          return Opacity(
-            opacity: opacity,
-            child: Transform.scale(
-              alignment: Alignment.center,
-              scale: animationValue,
-              child: isLoading ? _loading() : _product(index),
-            ),
-          );
-        },
+              return Opacity(
+                opacity: opacity,
+                child: Transform.scale(
+                  alignment: Alignment.center,
+                  scale: animationValue,
+                  child: isLoading ? _loading() : _product(index),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.favorite),
       ),
     );
   }

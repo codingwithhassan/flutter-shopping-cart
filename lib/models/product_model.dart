@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:products/boxes.dart';
 import 'package:products/logging.dart';
 import 'package:products/models/cart_model.dart';
-import 'package:logger/logger.dart';
 
 class ProductModel {
   late int id;
