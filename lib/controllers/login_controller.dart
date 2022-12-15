@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:products/logging.dart';
-import 'package:products/screens/products_screen.dart';
+import 'package:products/screens/auth/login_screen.dart';
 
 class LoginController {
   static final log = logger(LoginController);
@@ -10,7 +10,7 @@ class LoginController {
 
     // or Timer.periodic
     Timer(const Duration(seconds: 1), () {
-      Get.offNamed(ProductsScreen.routeName);
+      Get.offNamed(LoginScreen.routeName);
     });
   }
 }

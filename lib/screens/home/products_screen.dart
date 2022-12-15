@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:products/controllers/product_controller.dart';
-import 'package:products/Widgets/product_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:products/screens/home/product_item.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
 

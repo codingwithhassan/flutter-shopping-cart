@@ -6,7 +6,7 @@ import 'package:products/controllers/product_controller.dart';
 import 'package:products/logging.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:products/models/product_model.dart';
-import 'package:products/widgets/cart_counter.dart';
+import 'package:products/widgets/counter.dart';
 import 'package:get/get.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -153,7 +153,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ),
                                 Column(
                                   children: [
-                                    CartCounter(
+                                    Counter(
                                       productData: productData,
                                       total: itemInCart != null
                                           ? itemInCart!.quantity

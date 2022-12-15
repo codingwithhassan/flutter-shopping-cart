@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:products/models/cart_model.dart';
+import 'package:products/screens/auth/login_screen.dart';
+import 'package:products/screens/auth/signup_screen.dart';
 import 'package:products/screens/product_screen.dart';
-import 'package:products/screens/products_screen.dart';
+import 'package:products/screens/home/products_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:products/screens/splash_screen.dart';
 import 'dependencies.dart' as dependencies;
@@ -41,6 +43,14 @@ class ShoppingApp extends StatelessWidget {
         GetPage(
           name: SplashScreen.routeName,
           page: () => const SplashScreen(),
+        ),
+        GetPage(
+          name: LoginScreen.routeName,
+          page: () => const LoginScreen(),
+        ),
+        GetPage(
+          name: SignupScreen.routeName,
+          page: () => const SignupScreen(),
         ),
         GetPage(
           name: ProductsScreen.routeName,

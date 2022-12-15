@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:products/screens/auth/signup_screen.dart';
+import 'package:products/screens/auth/login_screen.dart';
 import 'package:products/widgets/rounded_button.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const routeName = '/login';
-  const LoginScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatefulWidget {
+  static const routeName = '/signup';
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formField = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -28,13 +30,13 @@ class _LoginScreenState extends State<LoginScreen> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("Sign up"),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
-            top: height * 0.18,
+            top: height * 0.10,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -79,6 +81,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: confirmPasswordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        hintText: "Confirm Password",
+                        helperText: "Repeat your Password",
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || passwordController.text != value.toString()) {
+                          return 'Confirm Password should be same';
+                        }
+                        return null;
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -86,10 +107,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
               ),
               RoundedButton(
-                buttonText: "Login",
+                buttonText: "Register",
                 onTap: () {
                   if (_formField.currentState!.validate()) {
-                    Get.offNamed('/');
+                    Get.offAllNamed(LoginScreen.routeName);
                   }
                 },
               ),
@@ -99,12 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text("Don't have an account?"),
+                  const Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
-                      Get.toNamed(SignupScreen.routeName);
+                      Get.offAllNamed(LoginScreen.routeName);
                     },
-                    child: const Text("Sign up"),
+                    child: const Text("Login"),
                   ),
                 ],
               )

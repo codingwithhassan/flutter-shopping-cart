@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:products/models/product_model.dart';
 
-class CartCounter extends StatelessWidget {
+class Counter extends StatelessWidget {
   final ProductModel productData;
   final VoidCallback onChange;
   final int total;
-  const CartCounter(
+  const Counter(
       {Key? key, required this.productData, required this.onChange, required this.total})
       : super(key: key);
 
