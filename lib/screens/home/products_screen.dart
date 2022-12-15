@@ -154,7 +154,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               title: Text('Settings'),
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.logout),
               onTap: loginController.logout,
               title: const Text('Logout'),
             ),

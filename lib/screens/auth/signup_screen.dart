@@ -36,7 +36,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void _signUp() {
-    if (_formField.currentState!.validate()) {
+    if (_formField.currentState!.validate() && !isLoading) {
       setState(() {
         isLoading = true;
       });

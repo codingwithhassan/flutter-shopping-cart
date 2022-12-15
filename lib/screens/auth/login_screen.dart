@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _signIn() {
-    if (_formField.currentState!.validate()) {
+    if (_formField.currentState!.validate() && !isLoading) {
       setState(() {
         isLoading = true;
       });
