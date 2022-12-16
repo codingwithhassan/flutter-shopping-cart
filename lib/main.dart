@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:products/helpers/routes.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:products/screens/auth/login_screen.dart';
 import 'package:products/screens/auth/signup_screen.dart';
@@ -38,30 +39,8 @@ class ShoppingApp extends StatelessWidget {
         primarySwatch: Colors.purple,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashScreen.routeName,
-      getPages: [
-        GetPage(
-          name: SplashScreen.routeName,
-          page: () => const SplashScreen(),
-        ),
-        GetPage(
-          name: LoginScreen.routeName,
-          page: () => const LoginScreen(),
-        ),
-        GetPage(
-          name: SignupScreen.routeName,
-          page: () => const SignupScreen(),
-        ),
-        GetPage(
-          name: ProductsScreen.routeName,
-          page: () => const ProductsScreen(),
-        ),
-        GetPage(
-          name: ProductScreen.routeName,
-          page: () => const ProductScreen(),
-          transition: Transition.leftToRight,
-        )
-      ],
+      initialRoute: Routes.initialRoute,
+      getPages: Routes.all,
     );
   }
 }

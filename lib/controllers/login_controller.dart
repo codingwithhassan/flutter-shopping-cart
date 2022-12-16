@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:products/logging.dart';
+import 'package:products/utils/logging.dart';
 import 'package:products/screens/auth/login_screen.dart';
 import 'package:products/utils/alert.dart';
 

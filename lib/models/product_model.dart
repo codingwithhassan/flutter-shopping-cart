@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:products/boxes.dart';
-import 'package:products/logging.dart';
+import 'package:products/services/hive_boxes.dart';
+import 'package:products/utils/logging.dart';
 import 'package:products/models/cart_model.dart';
 
 class ProductModel {

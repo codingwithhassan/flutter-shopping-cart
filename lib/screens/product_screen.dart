@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:products/boxes.dart';
+import 'package:products/services/hive_boxes.dart';
 import 'package:products/controllers/product_controller.dart';
-import 'package:products/logging.dart';
+import 'package:products/utils/logging.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:products/models/product_model.dart';
 import 'package:products/widgets/counter.dart';

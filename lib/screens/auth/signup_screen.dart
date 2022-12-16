@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:products/controllers/login_controller.dart';
-import 'package:products/logging.dart';
+import 'package:products/utils/logging.dart';
 import 'package:products/screens/auth/login_screen.dart';
 import 'package:products/widgets/rounded_button.dart';
 
