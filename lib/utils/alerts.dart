@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 // see toast messages even app closed
-class Alert {
+class Alerts {
   static void success(String message) {
     Fluttertoast.showToast(
         msg: message,

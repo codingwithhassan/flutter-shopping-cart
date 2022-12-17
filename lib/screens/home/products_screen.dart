@@ -3,6 +3,8 @@ import 'package:products/controllers/login_controller.dart';
 import 'package:products/controllers/product_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:products/screens/home/product_item.dart';
+import 'package:products/services/firebase/firebase_messaging_service.dart';
+import 'package:products/utils/logging.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
 
@@ -21,6 +23,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   ScrollController scrollController = ScrollController();
   final ProductController productController = Get.find<ProductController>();
   final LoginController loginController = LoginController();
+  final FirebaseMessagingService firebaseMessagingService = FirebaseMessagingService();
+  final log = logger(ProductsScreen);
 
   void getData() {
     productController.setProductList().then((products) {
@@ -31,6 +35,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
+  Future<void> initFCM() async{
+    await firebaseMessagingService.init();
+  }
+
   void _openProduct(context, int id) {
     Get.toNamed('/product/$id');
   }
@@ -38,8 +46,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   void initState() {
     super.initState();
+    initFCM();
     getData();
     scrollController.addListener(_onScrollListView);
+    log.i("initState Finished!");
   }
 
   void _onScrollListView() {
@@ -87,7 +97,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _product(int index){
+  Widget _product(int index) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -108,8 +118,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             height: 80,
             width: 80,
             fit: BoxFit.cover,
-            errorWidget: (context, url, error) =>
-            const Icon(Icons.error),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
           title: productController.products[index].title,
           category: productController.products[index].category,

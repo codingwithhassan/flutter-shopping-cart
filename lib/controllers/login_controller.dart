@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:products/utils/logging.dart';
 import 'package:products/screens/auth/login_screen.dart';
-import 'package:products/utils/alert.dart';
+import 'package:products/utils/alerts.dart';
 
 class LoginController {
   static final log = logger(LoginController);
@@ -21,7 +21,7 @@ class LoginController {
   void logout() {
     auth.signOut().then(
       (value) {
-        Alert.success("User Logged out!");
+        Alerts.success("User Logged out!");
         Get.offNamed(LoginScreen.routeName);
       },
     ).onError(
@@ -34,14 +34,14 @@ class LoginController {
   void signIn(String email, String password, Function? callback) {
     auth.signInWithEmailAndPassword(email: email, password: password).then(
       (value) {
-        Alert.success("${value.user!.email} Logged In successfully!");
+        Alerts.success("${value.user!.email} Logged In successfully!");
         Get.offAllNamed('/');
       },
     ).onError(
       (error, stackTrace) {
         log.e(error.toString());
         if (callback != null) callback();
-        Alert.error(error.toString());
+        Alerts.error(error.toString());
       },
     );
   }
@@ -54,13 +54,13 @@ class LoginController {
     )
         .then(
           (value) {
-        Alert.success("Account created successfully!");
+        Alerts.success("Account created successfully!");
         Get.offAllNamed(LoginScreen.routeName);
       },
     )
         .onError((error, stackTrace){
       log.e(error.toString());
-      Alert.error(error.toString());
+      Alerts.error(error.toString());
       if(callback != null) callback();
     });
   }

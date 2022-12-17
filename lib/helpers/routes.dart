@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:products/middlewares/auth_middleware.dart';
 import 'package:products/screens/auth/login_screen.dart';
 import 'package:products/screens/auth/signup_screen.dart';
 import 'package:products/screens/home/products_screen.dart';
@@ -24,11 +25,17 @@ class Routes {
     GetPage(
       name: ProductsScreen.routeName,
       page: () => const ProductsScreen(),
+      middlewares: [
+        AuthMiddleware(),
+      ],
     ),
     GetPage(
       name: ProductScreen.routeName,
       page: () => const ProductScreen(),
       transition: Transition.leftToRight,
+      middlewares: [
+        AuthMiddleware(),
+      ],
     )
   ];
 }

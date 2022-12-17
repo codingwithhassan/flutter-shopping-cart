@@ -10,6 +10,7 @@ class ProductRepository extends GetxService {
   Future<List<ProductModel>> getProductList() async {
     Response response = await dummyService.get("/products");
     if (response.statusCode != 200) {
+      // return Future.error(response.statusText!);
       return [];
     }
 
