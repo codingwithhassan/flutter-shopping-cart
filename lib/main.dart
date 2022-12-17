@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:products/helpers/routes.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:products/services/firebase/firebase_messaging_service.dart';
 import 'dependencies.dart' as dependencies;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -27,7 +26,6 @@ void main() async {
   await Hive.openBox<CartModel>('cart');
 
   await Firebase.initializeApp();
-  FirebaseMessagingService firebaseMessagingService = FirebaseMessagingService();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const ShoppingApp());

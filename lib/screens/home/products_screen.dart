@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:products/controllers/login_controller.dart';
 import 'package:products/controllers/product_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:products/screens/home/product_item.dart';
 import 'package:products/services/firebase/firebase_messaging_service.dart';
+import 'package:products/utils/local_notifications.dart';
 import 'package:products/utils/logging.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 class ProductsScreen extends StatefulWidget {
   static const routeName = '/';
@@ -37,6 +42,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> initFCM() async{
     await firebaseMessagingService.init();
+    await LocalNotifications.initialize(flutterLocalNotificationsPlugin);
   }
 
   void _openProduct(context, int id) {
@@ -182,6 +188,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          LocalNotifications.showBigTextNotification(title: "Test", body: "Hi there!", fln: flutterLocalNotificationsPlugin);
+        },
+        child: const Icon(Icons.favorite),
+      ),
       body: Container(
         color: Colors.grey[300],
         child: SizedBox(
@@ -218,10 +230,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
             },
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.favorite),
       ),
     );
   }
