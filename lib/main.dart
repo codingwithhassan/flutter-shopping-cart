@@ -6,8 +6,14 @@ import 'package:products/helpers/routes.dart';
 import 'package:products/models/cart_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:products/services/firebase/firebase_messaging_service.dart';
-import 'package:products/utils/local_notifications.dart';
 import 'dependencies.dart' as dependencies;
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint("Handling a background message: ${message.messageId}");
+  if (message.notification != null) {
+    debugPrint(message.notification!.title);
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // wait till dependencies loaded
@@ -22,7 +28,7 @@ void main() async {
 
   await Firebase.initializeApp();
   FirebaseMessagingService firebaseMessagingService = FirebaseMessagingService();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingService.backgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const ShoppingApp());
 }
