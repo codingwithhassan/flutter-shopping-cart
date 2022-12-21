@@ -11,7 +11,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 class ProductsScreen extends StatefulWidget {
   static const routeName = '/';
@@ -23,24 +23,30 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  bool isLoading = true;
+  bool isShimmerEffectLoading = true;
   int countItems = 8;
   ScrollController scrollController = ScrollController();
   final ProductController productController = Get.find<ProductController>();
   final LoginController loginController = LoginController();
-  final FirebaseMessagingService firebaseMessagingService = FirebaseMessagingService();
+  final FirebaseMessagingService firebaseMessagingService =
+      FirebaseMessagingService();
   final log = logger(ProductsScreen);
 
   void getData() {
-    productController.setProductList().then((products) {
+    if(!isShimmerEffectLoading){
       setState(() {
+        countItems += 1;
+      });
+    }
+    productController.fetchProductList().then((products) {
+      setState(() {
+        isShimmerEffectLoading = false;
         countItems = productController.products.length;
-        isLoading = false;
       });
     });
   }
 
-  Future<void> initFCM() async{
+  Future<void> initFCM() async {
     await firebaseMessagingService.init();
     await LocalNotifications.initialize(flutterLocalNotificationsPlugin);
   }
@@ -60,6 +66,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   void _onScrollListView() {
     setState(() {});
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent * 0.95 &&
+        !isShimmerEffectLoading &&
+        !productController.isLoading) {
+      if (productController.hasMore) {
+        getData();
+        log.i("load more");
+      }
+    }
   }
 
   @override
@@ -68,7 +83,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     scrollController.dispose();
   }
 
-  Widget _loading() {
+  Widget _loadingItem() {
     return Shimmer.fromColors(
       baseColor: Colors.white,
       highlightColor: const Color(0xFFD6D6D6),
@@ -103,7 +118,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _product(int index) {
+  Widget _productItem(int index) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -126,7 +141,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             fit: BoxFit.cover,
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
-          title: productController.products[index].title,
+          title: "$index - ${productController.products[index].title}",
           category: productController.products[index].category,
           price: productController.products[index].price,
           onOpen: () {
@@ -190,9 +205,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          LocalNotifications.showBigTextNotification(title: "Test", body: "Hi there!", fln: flutterLocalNotificationsPlugin);
+          LocalNotifications.showBigTextNotification(
+              title: "Test",
+              body: "Hi there!",
+              fln: flutterLocalNotificationsPlugin);
         },
-        child: const Icon(Icons.favorite),
+        child: const Icon(Icons.notification_add),
       ),
       body: Container(
         color: Colors.grey[300],
@@ -202,6 +220,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
             controller: scrollController,
             itemCount: countItems,
             itemBuilder: (context, index) {
+              if(!isShimmerEffectLoading && index >= productController.countItems){
+                return const Padding(padding: EdgeInsets.only(top:20, bottom: 20),child: Center(child: CircularProgressIndicator()));
+              }
               double itemOffset = index * 90;
               double totalOffset = scrollController.offset;
 
@@ -218,13 +239,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   opacity = 0;
                 }
               }
-
               return Opacity(
                 opacity: opacity,
                 child: Transform.scale(
                   alignment: Alignment.center,
                   scale: animationValue,
-                  child: isLoading ? _loading() : _product(index),
+                  child: isShimmerEffectLoading ? _loadingItem() : _productItem(index),
                 ),
               );
             },

@@ -35,7 +35,7 @@ class ProductModel {
     title = json['title'] as String;
     description = json['description'] as String;
     price = json['price'] as int;
-    discountPercentage = json['discountPercentage'] as double;
+    discountPercentage = json['discountPercentage'].toDouble() as double;
     rating = json['rating'].toDouble() as double;
     stock = json['stock'] as int;
     brand = json['brand'] as String;
